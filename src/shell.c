@@ -174,6 +174,7 @@ void test_command(int n, char *argv[]) {
     fio_printf(1, "\r\n");
     fio_printf(1, "please input a number to calculate fibonacci(less than 10) : \r\n");
     fio_read(0, fib_input  , 1 );
+    fio_printf(1, "\r\n");
     int int_input = fib_input[0]-'0';
     for(;int_input>=0;int_input--)
     {
