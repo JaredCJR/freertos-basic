@@ -160,11 +160,26 @@ void help_command(int n,char *argv[]){
 	}
 }
 
+
+int fibonacci(int x) {
+if(x<=0) return 0;
+if(x==1) return 1;
+return fibonacci(x-1) + fibonacci(x-2);
+}
+
 void test_command(int n, char *argv[]) {
     int handle;
     int error;
-
+    char fib_input[1];
     fio_printf(1, "\r\n");
+    fio_printf(1, "please input a number to calculate fibonacci(less than 10) : \r\n");
+    fio_read(0, fib_input  , 1 );
+    int int_input = fib_input[0]-'0';
+    for(;int_input>=0;int_input--)
+    {
+        fio_printf(1, "%s%d%s : %d \r\n","test fibonacci(",(int_input),")",fibonacci(int_input-1));
+    }
+
     
     handle = host_action(SYS_SYSTEM, "mkdir -p output");
     handle = host_action(SYS_SYSTEM, "touch output/syslog");
