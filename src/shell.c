@@ -24,6 +24,7 @@ void help_command(int, char **);
 void host_command(int, char **);
 void mmtest_command(int, char **);
 void test_command(int, char **);
+void new_command(int, char **);
 void _command(int, char **);
 
 #define MKCL(n, d) {.name=#n, .fptr=n ## _command, .desc=d}
@@ -36,7 +37,8 @@ cmdlist cl[]={
 	MKCL(host, "Run command on host"),
 	MKCL(mmtest, "heap memory allocation test"),
 	MKCL(help, "help"),
-	MKCL(test, "test new function"),
+	MKCL(test, "test fibonacci function"),
+	MKCL(new, "test creating a new task ,and show under \"ps\" command "),
 	MKCL(, ""),
 };
 
@@ -178,7 +180,7 @@ void test_command(int n, char *argv[]) {
     int int_input = fib_input[0]-'0';
     for(;int_input>=0;int_input--)
     {
-        fio_printf(1, "%s%d%s : %d \r\n","test fibonacci(",(int_input),")",fibonacci(int_input-1));
+        fio_printf(1, "%s%d%s : %d \r\n","test fibonacci(",int_input,")",fibonacci(int_input));
     }
 
     
@@ -201,6 +203,24 @@ void test_command(int n, char *argv[]) {
 
     host_action(SYS_CLOSE, handle);
 }
+
+xTaskHandle xHandle_new_command;
+
+void new_task(void *pvParameters)
+{
+		//fio_printf(1, "new command task working \r\n");
+		vTaskSuspend(xHandle_new_command);
+}
+
+void new_command(int n,char *argv[]){
+	fio_printf(1, "\r\n");
+	fio_printf(1, "new command \r\n");
+	xTaskCreate(new_task,
+	            (signed portCHAR *) "NEW TASK",
+	            512 /* stack size */, NULL,
+	            tskIDLE_PRIORITY + 2, &xHandle_new_command);
+	}
+
 
 void _command(int n, char *argv[]){
     (void)n; (void)argv;
