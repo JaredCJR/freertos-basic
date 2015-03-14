@@ -180,7 +180,7 @@ void test_command(int n, char *argv[]) {
     int int_input = fib_input[0]-'0';
     for(;int_input>=0;int_input--)
     {
-        fio_printf(1, "%s%d%s : %d \r\n","test fibonacci(",int_input,")",fibonacci(int_input));
+        fio_printf(1, "%s%d%s : %d \r\n","test fibonacci series (",int_input,")",fibonacci(int_input));
     }
 
     
@@ -208,16 +208,14 @@ xTaskHandle xHandle_new_command;
 
 void new_task(void *pvParameters)
 {
-		//fio_printf(1, "new command task working \r\n");
 		vTaskSuspend(xHandle_new_command);
 }
 
 void new_command(int n,char *argv[]){
-	fio_printf(1, "\r\n");
-	fio_printf(1, "new command \r\n");
+	fio_printf(1, "\r\nnew command \r\n");
 	xTaskCreate(new_task,
-	            (signed portCHAR *) "NEW TASK",
-	            512 /* stack size */, NULL,
+	            (signed portCHAR *) "newTASK",
+	            128/* stack size */, NULL,
 	            tskIDLE_PRIORITY + 2, &xHandle_new_command);
 	}
 
