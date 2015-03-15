@@ -147,6 +147,49 @@ void system_logger(void *pvParameters)
     host_action(SYS_CLOSE, handle);
 }
 
+void write_sysinfo(void *pvParameters)
+{
+    signed char buf[512];
+    char output[128] = {0};
+
+    char *tag = "\nName             State   Priority     Stack    Num\n****************************************\n";
+    int handle, error;
+    const portTickType xDelay = 300;
+
+    handle = host_action(SYS_SYSTEM, "mkdir -p output");
+    handle = host_action(SYS_SYSTEM, "touch output/sysinfo");
+
+    handle = host_action(SYS_OPEN, "output/sysinfo", 4);
+    if(handle == -1) {
+        fio_printf(1, "Open file error!\n");
+        return;
+    }
+
+    while(1) {
+    	memcpy(output, tag, strlen(tag));
+        error = host_action(SYS_WRITE, handle, (void *)output, strlen(output));
+        if(error != 0) {
+            fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
+            host_action(SYS_CLOSE, handle);
+            return;
+        }
+        vTaskList(buf);
+        //memcpy(output, (char *)(buf + 2), strlen((char *)buf) - 2);
+
+        error = host_action(SYS_WRITE, handle, (void *)buf, strlen((char *)buf));
+        if(error != 0) {
+            fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
+            host_action(SYS_CLOSE, handle);
+            return;
+        }
+
+        vTaskDelay(xDelay);
+    }
+
+    host_action(SYS_CLOSE, handle);
+}
+
+
 int main()
 {
 	init_rs232();
@@ -177,6 +220,13 @@ int main()
 	            (signed portCHAR *) "Logger",
 	            1024 /* stack size */, NULL, tskIDLE_PRIORITY + 1, NULL);
 #endif
+
+
+	/* Create a task to record system info. */
+	xTaskCreate(write_sysinfo,
+	            (signed portCHAR *) "wINFO",
+	            1024 /* stack size */, NULL, tskIDLE_PRIORITY + 1, NULL);
+
 
 	/* Start running the tasks. */
 	vTaskStartScheduler();
