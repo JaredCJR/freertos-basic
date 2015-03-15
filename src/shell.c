@@ -214,7 +214,7 @@ void new_task(void *pvParameters)
 void new_command(int n,char *argv[]){
 	fio_printf(1, "\r\nnew command \r\n");
 	xTaskCreate(new_task,
-	            (signed portCHAR *) "newTASK",
+	            (signed portCHAR *) "aTASK",
 	            128/* stack size */, NULL,
 	            tskIDLE_PRIORITY + 2, &xHandle_new_command);
 	}
