@@ -1,7 +1,7 @@
 #include "osdebug.h"
 #include "filesystem.h"
 #include "fio.h"
-
+#include "clib.h"
 #include <stdint.h>
 #include <string.h>
 #include <hash-djb2.h>
@@ -92,7 +92,8 @@ int fs_opendir(const char * path){
     
     for (int i = 0; i < MAX_FS; i++) {
         if (fss[i].hash == hash)
-            return fss[i].dcb(fss[i].opaque, path);
+	    return fss[i].dcb(fss[i].opaque, path);
+	   // fio_printf(1,"\r\n",fss[i].dcb(fss[i].opaque,path));
     }    
 
     return OPENDIR_NOTFOUNDFS;

@@ -67,15 +67,15 @@ void ls_command(int n, char *argv[]){
     fio_printf(1,"\r\n"); 
     int dir;
     if(n == 0){
-        dir = fs_opendir("");
     }else if(n == 1){
-        dir = fs_opendir(argv[1]);
-        //if(dir == )
+    }else if(n==2){
+	fs_opendir(argv[1]);
+	dir = fs_opendir(argv[1]);
+	fio_printf(1,"\r\n",dir);//pass the path
     }else{
         fio_printf(1, "Too many argument!\r\n");
         return;
     }
-(void)dir;   // Use dir
 }
 
 int filedump(const char *filename){
